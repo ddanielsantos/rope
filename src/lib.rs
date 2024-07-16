@@ -1,5 +1,3 @@
-use std::ops::Range;
-
 #[derive(Debug)]
 enum Node {
     Leaf(String),
@@ -11,51 +9,47 @@ enum Node {
 }
 
 impl Node {
-    fn new() -> Self {
-        Node::Leaf("".to_string())
+    fn from_str(content: &str) -> Self {
+        Node::Leaf(content.to_string())
+    }
+
+    fn get_wei(&self) -> usize {
+        match self {
+            Node::Leaf(content) => content.len(),
+            Node::Internal { wei, .. } => *wei,
+        }
     }
 }
 
 #[derive(Debug)]
 struct Rope {
     wei: usize,
-    root: Option<Node>,
+    root: Option<Box<Node>>,
+}
+
+enum Error {
+    PushError,
 }
 
 impl Rope {
-    fn new() -> Self {
-        Self { wei: 0, root: None }
-    }
-
-    fn push(&mut self, input: &str) -> () {
-        todo!()
-    }
-
-    fn append(&self, other: Rope) -> () {
-        todo!()
-    }
-
-    fn replace(&mut self, range: Range<i32>, input: &str) -> () {
-        todo!()
-    }
-
-    fn text(&self) -> String {
-        let a = &self.root;
-
-        match a {
-            Some(node) => match node {
-                Node::Leaf(content) => content.to_string(),
-                Node::Internal { wei, left, right } => todo!(),
-            },
-            None => todo!(),
-        }
-    }
-
+    /// Creates a [`Rope`] from an initial text
     fn from_str(arg: &str) -> Self {
         Self {
             wei: arg.len(),
-            root: Some(Node::Leaf(arg.to_string())),
+            root: Some(Box::new(Node::Leaf(arg.to_string()))),
         }
+    }
+
+    fn concat(&mut self, other: Rope) -> () {
+        let wei = self.wei + other.wei;
+        let n = Node::Internal {
+            wei,
+            left: self.root.take(),
+            right: other.root,
+        };
+
+        self.root = Some(Box::new(n));
+        self.wei = wei;
     }
 }
 
@@ -64,11 +58,12 @@ mod tests {
     use super::*;
 
     #[test]
-    fn it_works() {
-        let mut rope = Rope::from_str("One coffee, please. Black, yes.");
+    fn concat_rope() {
+        let mut rop = Rope::from_str("i rope this works");
+        let rop2 = Rope::from_str(", it will!!");
 
-        // Replace characters 4 to 10 (0-indexed) with "guinness".
-        rope.replace(4..10, "guinness");
-        assert_eq!(rope.text(), "One guinness, please. Black, yes.");
+        rop.concat(rop2);
+
+        assert_eq!(rop.wei, 28);
     }
 }
