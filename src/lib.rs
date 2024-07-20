@@ -28,7 +28,6 @@ struct Rope {
 }
 
 impl Rope {
-    /// Creates a [`Rope`] from an initial text
     fn from_str(arg: &str) -> Self {
         Self {
             wei: arg.len(),
@@ -36,7 +35,7 @@ impl Rope {
         }
     }
 
-    fn concat(&mut self, other: Rope) -> () {
+    fn concat(&mut self, other: Rope) {
         let wei = self.wei + other.wei;
         let n = Node::Internal {
             wei,
