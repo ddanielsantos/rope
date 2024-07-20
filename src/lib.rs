@@ -27,10 +27,6 @@ struct Rope {
     root: Option<Box<Node>>,
 }
 
-enum Error {
-    PushError,
-}
-
 impl Rope {
     /// Creates a [`Rope`] from an initial text
     fn from_str(arg: &str) -> Self {
