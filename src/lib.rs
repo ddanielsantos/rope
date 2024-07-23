@@ -46,6 +46,14 @@ impl Rope {
         self.root = Some(Box::new(n));
         self.wei = wei;
     }
+
+    fn split(&mut self, arg: usize) -> Rope {
+        if self.wei == 0 {
+            return Rope::from_str("");
+        }
+
+        Rope::from_str("idk yet")
+    }
 }
 
 #[cfg(test)]
@@ -60,5 +68,20 @@ mod tests {
         rop.concat(rop2);
 
         assert_eq!(rop.wei, 28);
+    }
+
+    #[test]
+    fn split_rope() {
+        let mut rop = Rope::from_str("Hello,");
+        rop.concat(Rope::from_str(" world!"));
+
+        println!("{rop:?}");
+        assert_eq!(rop.wei, 13);
+
+        let remainder = rop.split(10);
+
+        println!("{rop:?}");
+        assert_eq!(rop.wei, 10);
+        assert_eq!(remainder.wei, 3);
     }
 }
