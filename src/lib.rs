@@ -27,6 +27,12 @@ struct Rope {
     root: Option<Box<Node>>,
 }
 
+impl Default for Rope {
+    fn default() -> Self {
+        Self { wei: 0, root: None }
+    }
+}
+
 impl Rope {
     fn from_str(arg: &str) -> Self {
         Self {
@@ -49,7 +55,7 @@ impl Rope {
 
     fn split(&mut self, arg: usize) -> Rope {
         if self.wei == 0 {
-            return Rope::from_str("");
+            return Rope::default();
         }
 
         Rope::from_str("idk yet")
