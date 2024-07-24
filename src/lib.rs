@@ -21,16 +21,10 @@ impl Node {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 struct Rope {
     wei: usize,
     root: Option<Box<Node>>,
-}
-
-impl Default for Rope {
-    fn default() -> Self {
-        Self { wei: 0, root: None }
-    }
 }
 
 impl Rope {
