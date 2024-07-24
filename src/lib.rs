@@ -19,6 +19,26 @@ impl Node {
             Node::Internal { wei, .. } => *wei,
         }
     }
+
+    fn split(&mut self, pos: usize) -> Rope {
+        match self {
+            Node::Leaf(ref mut content) => {
+                let ri = content.split_off(pos);
+
+                Rope {
+                    wei: ri.len(),
+                    root: Some(Box::new(Node::Leaf(ri))),
+                }
+            }
+            Node::Internal { wei, left, right } => {
+                if *wei == 0 {
+                    return Rope::default();
+                }
+
+                Rope::default()
+            }
+        }
+    }
 }
 
 #[derive(Debug, Default)]
@@ -47,12 +67,17 @@ impl Rope {
         self.wei = wei;
     }
 
-    fn split(&mut self, arg: usize) -> Rope {
+    fn split(&mut self, pos: usize) -> Rope {
         if self.wei == 0 {
+            println!("empy");
             return Rope::default();
         }
 
-        Rope::from_str("idk yet")
+        self.root.take().map_or(Rope::default(), |mut root| {
+            self.wei = pos;
+
+            root.split(pos)
+        })
     }
 }
 
@@ -72,16 +97,12 @@ mod tests {
 
     #[test]
     fn split_rope() {
-        let mut rop = Rope::from_str("Hello,");
-        rop.concat(Rope::from_str(" world!"));
+        let mut rop = Rope::from_str("Daniel");
+        let remainder = rop.split(4);
 
         println!("{rop:?}");
-        assert_eq!(rop.wei, 13);
-
-        let remainder = rop.split(10);
-
-        println!("{rop:?}");
-        assert_eq!(rop.wei, 10);
-        assert_eq!(remainder.wei, 3);
+        assert_eq!(rop.wei, 4);
+        assert_eq!(rop.root, Some(Box::new(Node::Leaf("Dani".to_string()))));
+        assert_eq!(remainder.wei, 2);
     }
 }
