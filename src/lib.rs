@@ -55,7 +55,7 @@ impl Rope {
         self.root.take().map_or_else(Rope::default, |mut root| {
             self.wei = pos;
 
-            let rope = match *root {
+            match *root {
                 Node::Leaf(ref mut content) => {
                     let ri = content.split_off(pos);
 
@@ -67,9 +67,7 @@ impl Rope {
                     }
                 }
                 Node::Internal { wei, left, right } => todo!(),
-            };
-
-            rope
+            }
         })
     }
 }
