@@ -21,7 +21,7 @@ impl Node {
     }
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, PartialEq)]
 struct Rope {
     wei: usize,
     root: Option<Box<Node>>,
