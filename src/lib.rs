@@ -95,4 +95,51 @@ mod tests {
         assert_eq!(rop.root, Some(Box::new(Node::Leaf("Dani".to_string()))));
         assert_eq!(remainder.wei, 2);
     }
+
+    #[test]
+    fn split_rope2() {
+        let mut rop = Rope {
+            wei: 29,
+            root: Some(Box::new(Node::Internal {
+                wei: 29,
+                left: Some(Box::new(Node::Internal {
+                    wei: 10,
+                    left: Some(Box::new(Node::Internal {
+                        wei: 3,
+                        left: Some(Box::new(Node::from_str("Ola"))),
+                        right: Some(Box::new(Node::from_str(" mundo."))),
+                    })),
+                    right: Some(Box::new(Node::Internal {
+                        wei: 5,
+                        left: Some(Box::new(Node::from_str(" Meu "))),
+                        right: Some(Box::new(Node::from_str("nome "))),
+                    })),
+                })),
+                right: Some(Box::new(Node::Internal {
+                    wei: 9,
+                    left: Some(Box::new(Node::Internal {
+                        wei: 3,
+                        left: Some(Box::new(Node::from_str("eh "))),
+                        right: Some(Box::new(Node::from_str("Daniel"))),
+                    })),
+                    right: None,
+                })),
+            })),
+        };
+
+        let remainder = rop.split(13);
+
+        let expected = Rope {
+            wei: 10,
+            root: Some(Box::new(Node::Internal {
+                wei: 3,
+                left: Some(Box::new(Node::from_str("Ola"))),
+                right: Some(Box::new(Node::from_str(" mundo."))),
+            })),
+        };
+
+        assert_eq!(rop.wei, 13);
+        assert_eq!(rop, expected);
+        assert_eq!(remainder.wei, 18);
+    }
 }
